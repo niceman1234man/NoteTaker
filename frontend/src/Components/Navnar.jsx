@@ -1,7 +1,13 @@
 import React from 'react'
 import { FaSearch } from 'react-icons/fa';
+import { useNavigate } from 'react-router';
 
-function Navnar() {
+function Navnar({userInfo}) {
+  const navigate=useNavigate();
+  const onLogout=()=>{
+    localStorage.clear();
+    Navigate('/login');
+  }
   return (
     <div className='full-container border-b shadow'>
     <div className='flex justify-between items-center p-4'>
@@ -16,8 +22,8 @@ function Navnar() {
     <h2>YT</h2>
     </div>
     
-    <p className='mr-1'>Yonni Tala</p>
-    <button className='ml-4 underline'>Lougout</button>
+    <p className='mr-1'>{userInfo.fullName}</p>
+    <button className='ml-4 underline' onClick={onLogout}>Lougout</button>
   </div>
   
    </div>
