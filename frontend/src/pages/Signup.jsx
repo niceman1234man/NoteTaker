@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Password from '../Components/Password';
-import { Link } from 'react-router';
+import { Link, Navigate, useNavigate } from 'react-router';
 
 function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
-
-  const onSubmitControl = (e) => {
+  const navigate=useNavigate();
+  const onSubmitControl = async(e) => {
     e.preventDefault();
 
     // Basic validation
@@ -24,8 +24,34 @@ function Signup() {
 
     setError('');
     console.log('Form submitted:', { name, email, password });
+
+    try {
+      const response=await axiosInstance.post('/ceate-account',{
+        fullName:name,
+        email,
+        password
+      });
+      if(response.data && response.data.error){
+        setError(response.data.message);
+        return
+      }
+      if(response.data && response.data.accessToken){
+       localStorage.setItem("token",response.data.accessToken);
+       navigate('/dashboard');
+        return
+      }
+    } catch (error) {
+      if(error.response &&error.response.data && error.response.data.message){
+        setError(error.response.data.message);
+      }else{
+        setError("An unexpected error occurred. Pleas try again.");
+      }
+    }
+    
     // Proceed with signup logic (e.g., API call)
   };
+
+  
 
   return (
     <div className="mt-8 flex flex-auto justify-center">
