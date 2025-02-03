@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import Password from '../Components/Password';
+import axiosInstance from '../../utils/axiosInstance';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate=useNavigate();
 
-  const onSubmitControl = (e) => {
+  const onSubmitControl = async(e) => {
     e.preventDefault();
 
     // Basic validation
@@ -23,6 +25,25 @@ function Login() {
 
     setError('');
     console.log('Form submitted:', { email, password });
+      
+try {
+  const response=await axiosInstance.post('/login',{
+    email,
+    password
+  });
+  if(response.data && response.data.accessToken){
+    localStorage.setItem("token",response.data.accessToken);
+    navigate('/dashboard');
+  }
+} catch (error) {
+  if(error.response &&error.response.data && error.response.data.message){
+    setError(error.response.data.message);
+  }else{
+    setError("An unexpected error occurred. Pleas try again.");
+  }
+}
+
+
     // Proceed with your login logic
   };
 
