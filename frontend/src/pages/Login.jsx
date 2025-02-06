@@ -27,13 +27,13 @@ function Login() {
     console.log('Form submitted:', { email, password });
       
 try {
-  const response=await axiosInstance.post('/login',{
+  const response=await axiosInstance.post('/user/login',{
     email,
     password
   });
   if(response.data && response.data.accessToken){
     localStorage.setItem("token",response.data.accessToken);
-    navigate('/dashboard');
+    navigate('/');
   }
 } catch (error) {
   if(error.response &&error.response.data && error.response.data.message){
