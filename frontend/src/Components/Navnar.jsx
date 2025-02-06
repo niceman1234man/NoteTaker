@@ -1,37 +1,67 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router';
 
-function Navnar({userInfo}) {
-  const navigate=useNavigate();
-  const onLogout=()=>{
-    localStorage.clear();
-    Navigate('/login');
-  }
-  return (
-    <div className='full-container border-b shadow'>
-    <div className='flex justify-between items-center p-4'>
-   <h2 className='text-xl font-bold'>Note</h2>
-  <form className='relative'>
-    <input type="text" className='border border-gray-700 px-6 py-1 rounded-md bg-gray-300 '/>
-    <span className='absolute right-2 top-2'><FaSearch/></span>
-    </form>
-   <div>
-  <div className='flex  '>
-    <div className='flex w-5 h-5 bg-gray-300 rounded-full p-4 items-center justify-center font-semibold'>
-    <h2>YT</h2>
-    </div>
-    
-    <p className='mr-1'>{userInfo.fullName}</p>
-    <button className='ml-4 underline' onClick={onLogout}>Lougout</button>
-  </div>
-  
-   </div>
-   
-    </div>
-    </div>
-    
-  )
+function Navnar({ userInfo,onSearchNote}) {
+    const navigate = useNavigate();
+     const [serachQuery,setSearchQuery]=useState("");
+    const onLogout = () => {
+        localStorage.clear();
+        navigate('/login'); // Fixed the typo here
+    };
+
+    const handleSearch=()=>{
+
+        if(serachQuery){
+            onSearchNote(serachQuery);
+        }
+    }
+    const getInitials = (name) => {
+        if (!name) return "";
+        const words = name.split(" ");
+        let initials = "";
+        for (let i = 0; i < Math.min(words.length, 2); i++) {
+            initials += words[i][0];
+        }
+        return initials.toUpperCase(); // Use toUpperCase for consistency
+    };
+
+    // Handle loading or undefined userInfo
+    if (!userInfo) {
+        return <div>Loading...</div>;
+    }
+
+    const user = userInfo.fullName;
+    const initials = getInitials(user);
+
+    return (
+        <div className='full-container border-b shadow'>
+            <div className='flex justify-between items-center p-4'>
+                <h2 className='text-xl font-bold'>Note</h2>
+                <div className='relative' >
+                    <input 
+                        type="text" 
+                        className='border border-gray-700 px-6 py-1 rounded-md bg-gray-300' 
+                        placeholder="Search..."
+                        value={serachQuery}
+                        onChange={(e)=>setSearchQuery(e.target.value)}
+                    />
+                    <span className='absolute right-2 top-2'>
+                        <FaSearch onClick={handleSearch} />
+                    </span>
+                </div>
+                <div>
+                    <div className='flex items-center'>
+                        <div className='flex w-8 h-8 bg-gray-300 rounded-full items-center justify-center font-semibold mr-2 p-2 '>
+                            <h2>{initials}</h2> {/* Display initials here */}
+                        </div>
+                        <p className='mr-1 '>{user}</p>
+                        <button className='ml-4 underline' onClick={onLogout}>Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
-export default Navnar
+export default Navnar;
