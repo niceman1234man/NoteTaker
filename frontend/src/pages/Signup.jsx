@@ -43,7 +43,7 @@ function Signup() {
             localStorage.setItem("token", response.data.accessToken);
             toast("User Registered Successfully!");
             console.log("Redirecting to login..."); // Log before navigating
-            navigate('/login');
+            navigate('/');
         }
     } catch (error) {
         console.error("Error during signup:", error); // Log error details
@@ -94,7 +94,7 @@ function Signup() {
           </button>
           <p className="my-2 text-xl">
             Already have an account?{' '}
-            <Link className="underline cursor-pointer" to='/login'>Login</Link>
+            <Link className="underline cursor-pointer" to='/'>Login</Link>
           </p>
         </form>
       </div>

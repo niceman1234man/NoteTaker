@@ -7,7 +7,7 @@ function Navnar({ userInfo, onSearchNote }) {
   const [serachQuery, setSearchQuery] = useState("");
   const onLogout = () => {
     localStorage.clear();
-    navigate("/login"); // Fixed the typo here
+    navigate("/"); // Fixed the typo here
   };
 
   const handleSearch = () => {
