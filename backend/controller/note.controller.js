@@ -89,30 +89,32 @@ export const deleteNote=async(req,res)=>{
 
 }
 
-export const searchNote=async(req,res)=>{
+export const searchNote = async (req, res) => {
     try {
-         const {user}=req.user;
-         const {query}=req.query;
-         if (!query) {
-            console.log("query not found ");
-            return res.status(404).json({ message: "Query not found" });
+        const user = req.user; // 
+        const { query } = req.query;
+
+        if (!query) {
+            console.log("Query not found");
+            return res.status(400).json({ message: "Query not found" });
         }
-        const notes=await Note.find({userId:user._id,
-        $or:[
-        {title:{ $regex:new RegExp(query,"i")},
-        content:{ $regex:new RegExp(query,"i")}}
-        ]
-        })
-        return res.json({
-            notes:notes,
-            message:"Searched Notes"
-        })
+
+        const notes = await Note.find({
+            userId: user._id, 
+            $or: [
+                { title: { $regex: new RegExp(query, "i") } },
+                { content: { $regex: new RegExp(query, "i") } } //  Fixed misplaced bracket
+            ]
+        });
+
+        return res.json({ notes, message: "Searched Notes" });
+
     } catch (error) {
-        console.log(error)
-        return res.json("Internal Server Error")
-    
+        console.error("Search error:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
-}
+};
+
 
 
 export const allNotes=async(req,res)=>{
