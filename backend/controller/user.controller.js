@@ -46,11 +46,10 @@ export const login=async(req,res)=>{
   console.log(error)      
 }
 }
- // Adjust the path based on your project structure
 
 export const getUser = async (req, res) => {
     try {
-        const { user } = req.user; // Directly use req.user
+        const { user } = req.user; 
         const userInfo = await User.findOne({ _id: user._id }); // Await the promise
 
         if (!userInfo) {
