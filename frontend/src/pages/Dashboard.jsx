@@ -63,16 +63,16 @@ function Dashboard() {
   };
 
 
-  const isPinned = async (noteData) => {
+  const onPinned = async (noteData) => {
     const noteId = noteData._id;
+    const currentPinnedStatus = noteData.isPinned; // Get the current pinned status
     setLoading(true);
     try {
         const response = await axiosInstance.put('/note/pin-note/' + noteId, {
-          isPinned:!noteId.isPinned,
+            isPinned: !currentPinnedStatus, // Toggle the pinned status
         });
         if (response.data && response.data.note) {
-            getAllNotes();
-           
+            getAllNotes(); // Refresh notes list
         }
     } catch (error) {
         console.error(error); // Log error for debugging
@@ -83,7 +83,6 @@ function Dashboard() {
         setLoading(false);
     }
 };
-
   const deleteNote = async (data) => {
     const noteId = data._id;
     try {
@@ -96,28 +95,37 @@ function Dashboard() {
     }
   };
 
-const onSearch=async(query)=>{
-  try {
-    const response=await axiosInstance.get("/search-notes",{
-      params:{query}
-    });
-    if(response.data && response.data.notes){
-      setIsSearch(true);
-      setAllNotes(response.data.notes);
+  const onSearch = async (query) => {
+    try {
+      const response = await axiosInstance.get("/note/search-note", { // Correct route
+        params: { query },
+      });
+      if (response.data && response.data.notes) {
+        setIsSearch(true);
+        setAllNotes(response.data.notes);
+      }
+    } catch (error) {
+      console.error("Error searching notes:", error);
     }
-  } catch (error) {
-    console.log(error);
-  }
-}
+  };
+  
+const closeModal = () => {
+  setOpenAddEditModal({
+      isShown: false,
+      type: "add",
+      data: null,
+  });
+};
 
   useEffect(() => {
+    Modal.setAppElement("#root");
     getAllNotes();
     getUserInfo();
   }, []);
 
   return (
     <>
-      <Navnar userInfo={userInfo} onSearch={onSearch} />
+      <Navnar userInfo={userInfo} onSearchNote={onSearch} />
       <div className="container mx-auto">
         <div className="grid grid-cols-3 gap-4 mt-8">
           {loading ? (
@@ -133,7 +141,7 @@ const onSearch=async(query)=>{
                 isPinned={item.isPinned}
                 onEdit={() => handleEdit(item)}
                 onDelete={() => deleteNote(item)}
-                onPinNote={() => {isPinned}}
+                onPinNote={() => {onPinned(item)}}
               />
             ))
           ) : (
@@ -175,13 +183,7 @@ const onSearch=async(query)=>{
         <AddNote
           type={openAddEditModal.type}
           noteData={openAddEditModal.data}
-          onClose={() => {
-            setOpenAddEditModal({
-              isShown: false,
-              type: "add",
-              data: null,
-            });
-          }}
+          onClose={closeModal}
           getAllNotes={getAllNotes}
         />
       </Modal>

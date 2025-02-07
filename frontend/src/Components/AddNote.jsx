@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import TagInput from "./TagInput";
 import { MdClose } from "react-icons/md";
 import axiosInstance from "../../utils/axiosInstance";
+import { toast } from 'react-toastify'; // Import toast
+import 'react-toastify/dist/ReactToastify.css'; // Import toast CSS
 
 function AddNote({ noteData, type, getAllNotes, onClose }) {
     const [title, setTitle] = useState(noteData?.title || "");
@@ -11,49 +13,54 @@ function AddNote({ noteData, type, getAllNotes, onClose }) {
     const [loading, setLoading] = useState(false);
 
     const addNewNote = async () => {
-        setLoading(true);
-        try {
-            const response = await axiosInstance.post('/note/add-note', {
-                title,
-                content,
-                tags,
-            });
-            if (response.data && response.data.note) {
-                getAllNotes();
-                onClose();
-            }
-        } catch (error) {
-            console.error(error); // Log error for debugging
-            if (error.response && error.response.data && error.response.data.message) {
-                setError(error.response.data.message);
-            }
-        } finally {
-            setLoading(false);
+    setLoading(true);
+    setError(""); // Reset error state
+    try {
+        const response = await axiosInstance.post('/note/add-note', {
+            title,
+            content,
+            tags,
+        });
+        if (response.data && response.data.note) {
+            toast.success("Note added successfully!"); // Show success toast
+            getAllNotes();
         }
-    };
+    } catch (error) {
+        console.error(error);
+        if (error.response && error.response.data && error.response.data.message) {
+            setError(error.response.data.message);
+        }
+    } finally {
+        setLoading(false);
+        onClose(); // Close modal after processing
+    }
+};
 
-    const editNote = async () => {
-        const noteId = noteData._id;
-        setLoading(true);
-        try {
-            const response = await axiosInstance.put('/note/edit-note/' + noteId, {
-                title,
-                content,
-                tags,
-            });
-            if (response.data && response.data.note) {
-                getAllNotes();
-                onClose();
-            }
-        } catch (error) {
-            console.error(error); // Log error for debugging
-            if (error.response && error.response.data && error.response.data.message) {
-                setError(error.response.data.message);
-            }
-        } finally {
-            setLoading(false);
+const editNote = async () => {
+    const noteId = noteData._id;
+    setLoading(true);
+    setError(""); // Reset error state
+    try {
+        const response = await axiosInstance.put('/note/edit-note/' + noteId, {
+            title,
+            content,
+            tags,
+        });
+        if (response.data && response.data.note) {
+            toast.success("Note updated successfully!"); // Show success toast
+            getAllNotes();
         }
-    };
+    } catch (error) {
+        console.error(error);
+        if (error.response && error.response.data && error.response.data.message) {
+            setError(error.response.data.message);
+        }
+    } finally {
+        setLoading(false);
+        onClose(); // Close modal after processing
+    }
+};
+
 
     const handleNote = () => {
         if (!title.trim() || !content.trim()) { // Trim to avoid whitespace

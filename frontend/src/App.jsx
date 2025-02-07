@@ -5,7 +5,7 @@ import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import AddNote from './Components/AddNote'
-
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
       <Route path='/signup' element={<Signup/>}/>
       <Route path='/add' element={<AddNote/>}/>
     </Routes>
+    <ToastContainer/>
     </>
   )
 }

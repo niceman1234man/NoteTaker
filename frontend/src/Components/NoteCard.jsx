@@ -30,7 +30,7 @@ function NoteCard({
         <h3 className='text-lg font-semibold '>{title}</h3>
         <div className='py-2 flex justify-between'>
         <p className='text-xs '>{formattedDate} </p>
-        <TiPinOutline size={20} className={`cursor-pointer ${isPinned? 'text-blue-400':''}`}/>
+        <TiPinOutline size={20} onClick={onPinNote} className={`cursor-pointer ${isPinned? 'text-blue-400':''}`}/>
         </div>
         <p>{content} </p>
         <div className='py-2 flex justify-between'>
