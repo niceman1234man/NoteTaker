@@ -135,7 +135,7 @@ const closeModal = () => {
     <>
       <Navnar userInfo={userInfo} onSearchNote={onSearch} />
       <div className="container mx-auto">
-        <div className="grid grid-cols-3 gap-4 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-8">
           {loading ? (
             <p>Loading notes...</p>
           ) : allNotes.length > 0 ? (
@@ -161,7 +161,7 @@ const closeModal = () => {
         </div>
       </div>
       <button
-        className="bg-blue-600 px-3 py-2 rounded absolute right-8 bottom-5 text-white text-[30px]"
+        className="bg-blue-600 px-3 py-2 rounded absolute right-8 bottom-5 text-white text-[30px] sm:fixed"
         onClick={() => {
           setOpenAddEditModal({
             isShown: true,
