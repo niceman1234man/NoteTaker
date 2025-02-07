@@ -33,7 +33,7 @@ try {
   });
   if(response.data && response.data.accessToken){
     localStorage.setItem("token",response.data.accessToken);
-    navigate('/');
+    navigate('/dash');
   }
 } catch (error) {
   if(error.response &&error.response.data && error.response.data.message){
