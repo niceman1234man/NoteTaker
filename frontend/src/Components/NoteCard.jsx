@@ -37,6 +37,7 @@ function NoteCard({
         <p >{tags.map(item =>`#${item} `)}</p>
         <p className='flex'><MdModeEditOutline className='mr-2 cursor-pointer' onClick={onEdit}/> <MdDelete onClick={onDelete}  className='hover:text-red-600 cursor-pointer'/></p>
         </div>
+   
      </div>
     
   )

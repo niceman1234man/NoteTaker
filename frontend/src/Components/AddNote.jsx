@@ -24,6 +24,7 @@ function AddNote({ noteData, type, getAllNotes, onClose }) {
         if (response.data && response.data.note) {
             toast.success("Note added successfully!"); // Show success toast
             getAllNotes();
+         
         }
     } catch (error) {
         console.error(error);
@@ -49,6 +50,7 @@ const editNote = async () => {
         if (response.data && response.data.note) {
             toast.success("Note updated successfully!"); // Show success toast
             getAllNotes();
+           
         }
     } catch (error) {
         console.error(error);
@@ -70,8 +72,10 @@ const editNote = async () => {
         setError("");
         if (type === 'edit') {
             editNote();
+            window.location.reload();
         } else {
             addNewNote();
+            window.location.reload();
         }
     };
 

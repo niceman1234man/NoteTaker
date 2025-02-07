@@ -7,6 +7,8 @@ import { useNavigate } from "react-router";
 import axiosInstance from "../../utils/axiosInstance";
 import Navnar from "../Components/Navnar";
 import note from "../assets/note.jpg";
+import { toast } from 'react-toastify'; // Import toast
+import 'react-toastify/dist/ReactToastify.css'; // Import toast CSS
 
 function Dashboard() {
   const [openAddEditModal, setOpenAddEditModal] = useState({
@@ -71,8 +73,11 @@ function Dashboard() {
         const response = await axiosInstance.put('/note/pin-note/' + noteId, {
             isPinned: !currentPinnedStatus, // Toggle the pinned status
         });
-        if (response.data && response.data.note) {
+        if (response) {
+           toast.success("Note Updated successfully!");
+           window.location.reload();
             getAllNotes(); // Refresh notes list
+            
         }
     } catch (error) {
         console.error(error); // Log error for debugging
@@ -87,8 +92,11 @@ function Dashboard() {
     const noteId = data._id;
     try {
       const response = await axiosInstance.delete("/note/delete-note/" + noteId);
-      if (response.data && response.data.note) {
+      if (response) {
+         toast.success("Note deleted successfully!");
+         window.location.reload();
         getAllNotes();
+       
       }
     } catch (error) {
       console.error("An expected error occurred. Please try again.", error);
@@ -140,7 +148,7 @@ const closeModal = () => {
                 tags={item.tags}
                 isPinned={item.isPinned}
                 onEdit={() => handleEdit(item)}
-                onDelete={() => deleteNote(item)}
+                onDelete={() =>( deleteNote(item))}
                 onPinNote={() => {onPinned(item)}}
               />
             ))
